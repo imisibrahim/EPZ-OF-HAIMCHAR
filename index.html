@@ -1,1 +1,752 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="হাইমচরের অর্থনৈতিক মুক্তি: ইপিজেড আমাদের অধিকার। মেঘনা পাড়ের ভাঙনকবলিত মানুষের ন্যায্য দাবি — EPZ of Haimchar দাবি।">
+<meta name="keywords" content="EPZ, Haimchar, হাইমচর, ইপিজেড, চাঁদপুর, Meghna, নদী ভাঙন">
+<title>EPZ of Haimchar — হাইমচরের অধিকার, আমাদের অঙ্গীকার</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        deepblack: '#0a0a0a',
+        deepred: '#b91c1c',
+        gold: '#facc15',
+        eblue: '#38bdf8',
+      },
+      fontFamily: {
+        bengali: ['"Noto Sans Bengali"', '"Hind Siliguri"', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background: #0a0a0a; color: #e5e5e5; overflow-x: hidden; }
 
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #0a0a0a; }
+  ::-webkit-scrollbar-thumb { background: linear-gradient(#b91c1c, #facc15); border-radius: 10px; }
+
+  #riverCanvas {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .55;
+  }
+
+  .glass {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .glass-red {
+    background: linear-gradient(135deg, rgba(185,28,28,0.18), rgba(10,10,10,0.6));
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(185,28,28,0.35);
+  }
+
+  .card3d {
+    transform-style: preserve-3d;
+    transition: transform .5s cubic-bezier(.2,.9,.3,1.2), box-shadow .5s ease, border-color .5s ease;
+    will-change: transform;
+  }
+  .card3d:hover {
+    transform: translateY(-12px) rotateX(4deg) rotateY(-3deg) scale(1.02);
+    box-shadow: 0 25px 60px -10px rgba(185,28,28,0.4), 0 0 40px rgba(250,204,21,0.08);
+    border-color: rgba(250,204,21,0.45);
+  }
+
+  .hero-bg {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(56,189,248,0.18), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 0%, rgba(185,28,28,0.25), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 20%, rgba(250,204,21,0.10), transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #120a0a 50%, #0a0f14 100%);
+  }
+  .hero-river {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 38%;
+    background: linear-gradient(180deg, transparent, rgba(56,189,248,0.10) 30%, rgba(56,189,248,0.18));
+    mask-image: linear-gradient(180deg, transparent, black 40%);
+    -webkit-mask-image: linear-gradient(180deg, transparent, black 40%);
+  }
+  .wave {
+    position: absolute; left: -50%; width: 200%; height: 80px;
+    background: radial-gradient(ellipse 30px 8px at 50% 50%, rgba(56,189,248,0.35), transparent);
+    background-size: 120px 30px;
+    animation: waveMove 9s linear infinite;
+    opacity: .5;
+  }
+  @keyframes waveMove { from { transform: translateX(0); } to { transform: translateX(120px); } }
+
+  .text-gradient-gold {
+    background: linear-gradient(110deg, #facc15, #fde68a, #f59e0b, #facc15);
+    background-size: 250% auto;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shine 5s linear infinite;
+  }
+  @keyframes shine { to { background-position: 250% center; } }
+
+  .text-gradient-red {
+    background: linear-gradient(110deg, #ef4444, #b91c1c, #f87171);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-left { opacity: 0; transform: translateX(-50px); transition: all .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+  .reveal-right { opacity: 0; transform: translateX(50px); transition: all .9s cubic-bezier(.2,.8,.2,1); }
+  .reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+  .pulse-dot { animation: pulseDot 2s infinite; }
+  @keyframes pulseDot {
+    0% { box-shadow: 0 0 0 0 rgba(250,204,21,0.6); }
+    70% { box-shadow: 0 0 0 12px rgba(250,204,21,0); }
+    100% { box-shadow: 0 0 0 0 rgba(250,204,21,0); }
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #b91c1c, #7f1d1d);
+    transition: all .35s ease;
+    box-shadow: 0 8px 25px -5px rgba(185,28,28,0.5);
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -5px rgba(185,28,28,0.7); }
+  .btn-gold {
+    background: linear-gradient(135deg, #facc15, #d97706);
+    color: #0a0a0a;
+    transition: all .35s ease;
+    box-shadow: 0 8px 25px -5px rgba(250,204,21,0.4);
+  }
+  .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -5px rgba(250,204,21,0.6); }
+
+  .timeline-line {
+    position: absolute; left: 19px; top: 0; bottom: 0; width: 3px;
+    background: linear-gradient(180deg, #facc15, #b91c1c, #38bdf8);
+    border-radius: 3px;
+  }
+  @media (min-width: 768px) {
+    .timeline-line { left: 50%; transform: translateX(-50%); }
+  }
+
+  .page { display: none; animation: pageIn .6s ease both; }
+  .page.active { display: block; }
+  @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .nav-link { position: relative; transition: color .3s; }
+  .nav-link::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+    background: linear-gradient(90deg, #facc15, #b91c1c); transition: width .35s ease;
+  }
+  .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+  .nav-link.active { color: #facc15; }
+
+  .float-slow { animation: floatY 6s ease-in-out infinite; }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+
+  .marquee { display: flex; gap: 3rem; animation: marquee 26s linear infinite; white-space: nowrap; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .blockquote-fancy {
+    border-left: 4px solid #facc15;
+    background: linear-gradient(90deg, rgba(250,204,21,0.07), transparent);
+  }
+
+  .poster-card { transition: all .4s ease; }
+  .poster-card:hover { transform: scale(1.04) rotate(-1deg); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
+
+  .grain::before {
+    content: ""; position: absolute; inset: 0; opacity: .04; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+</style>
+</head>
+<body class="font-bengali">
+
+<canvas id="riverCanvas"></canvas>
+
+<nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 md:h-20">
+    <a href="https://example.com" class="flex items-center gap-3 group">
+      <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-deepred to-red-900 flex items-center justify-center font-black text-gold text-lg shadow-lg shadow-red-900/50 group-hover:scale-110 transition-transform">EPZ</div>
+      <div>
+        <div class="font-bold text-white text-base md:text-lg leading-tight">EPZ of Haimchar</div>
+        <div class="text-[10px] md:text-xs text-gold/80 -mt-0.5">হাইমচরের অধিকার দাবি</div>
+      </div>
+    </a>
+    <div class="hidden md:flex items-center gap-8 font-semibold text-sm">
+      <a href="https://example.com" data-page="home" onclick="showPage('home')" class="nav-link active text-gray-200 hover:text-gold">হোম</a>
+      <a href="https://example.com" data-page="history" onclick="showPage('history')" class="nav-link text-gray-200 hover:text-gold">ইতিহাস</a>
+      <a href="https://example.com" data-page="campaign" onclick="showPage('campaign')" class="nav-link text-gray-200 hover:text-gold">ক্যাম্পেইন</a>
+      <a href="contact.html" data-page="contact" onclick="showPage('contact')" class="nav-link text-gray-200 hover:text-gold">যোগাযোগ</a>
+      <a href="https://example.com" onclick="showPage('contact')" class="btn-gold px-5 py-2 rounded-full font-bold">আন্দোলনে যুক্ত হোন</a>
+    </div>
+    <button id="burger" class="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 rounded-lg glass">
+      <span class="w-6 h-0.5 bg-gold transition-all duration-300"></span>
+      <span class="w-6 h-0.5 bg-gold transition-all duration-300"></span>
+      <span class="w-6 h-0.5 bg-gold transition-all duration-300"></span>
+    </button>
+  </div>
+  <div id="mobileMenu" class="md:hidden hidden glass border-t border-white/10">
+    <div class="px-6 py-4 flex flex-col gap-4 font-semibold">
+      <a href="https://example.com" data-page="home" onclick="showPage('home')" class="nav-link active text-gray-200">হোম</a>
+      <a href="https://example.com" data-page="history" onclick="showPage('history')" class="nav-link text-gray-200">ইতিহাস</a>
+      <a href="https://example.com" data-page="campaign" onclick="showPage('campaign')" class="nav-link text-gray-200">ক্যাম্পেইন</a>
+      <a href="contact.html" data-page="contact" onclick="showPage('contact')" class="nav-link text-gray-200">যোগাযোগ</a>
+      <a href="https://example.com" onclick="showPage('contact')" class="btn-gold px-5 py-2.5 rounded-full font-bold text-center">আন্দোলনে যুক্ত হোন</a>
+    </div>
+  </div>
+</nav>
+
+<main class="relative z-10">
+
+<section id="page-home" class="page active">
+  <div class="hero-bg grain relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <div class="hero-river"></div>
+    <div class="wave" style="bottom:8%"></div>
+    <div class="wave" style="bottom:14%; animation-duration:12s; opacity:.3"></div>
+    <div class="wave" style="bottom:20%; animation-duration:15s; opacity:.2"></div>
+
+    <svg class="absolute bottom-0 right-0 w-full md:w-2/3 opacity-25" viewBox="0 0 800 200" fill="none">
+      <rect x="600" y="80" width="40" height="120" fill="#38bdf8" opacity=".3"/>
+      <rect x="650" y="50" width="50" height="150" fill="#facc15" opacity=".25"/>
+      <rect x="710" y="100" width="35" height="100" fill="#38bdf8" opacity=".3"/>
+      <rect x="540" y="110" width="50" height="90" fill="#b91c1c" opacity=".3"/>
+      <rect x="460" y="130" width="60" height="70" fill="#38bdf8" opacity=".2"/>
+      <path d="M0 200 Q200 150 400 190 T800 180 V200 H0Z" fill="#0e7490" opacity=".25"/>
+    </svg>
+
+    <div class="relative z-10 max-w-5xl mx-auto px-6 text-center py-20">
+      <div class="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8 text-sm reveal visible">
+        <span class="w-2.5 h-2.5 rounded-full bg-gold pulse-dot"></span>
+        <span class="text-gold font-semibold">চলমান গণদাবি — ২০২৬</span>
+      </div>
+      <h1 class="text-4xl sm:text-5xl md:text-7xl font-black leading-tight mb-6 text-white">
+        হাইমচরের <span class="text-gradient-red">অর্থনৈতিক মুক্তি:</span><br>
+        <span class="text-gradient-gold">ইপিজেড আমাদের অধিকার</span>
+      </h1>
+      <p class="text-gray-300 text-base md:text-xl max-w-3xl mx-auto leading-relaxed mb-10">
+        মেঘনার করাল গ্রাসে ৩০ বছরে ভিটেমাটি হারিয়েছেন <span class="text-gold font-bold">৩৫,৬০৫+</span> মানুষ।
+        আমরা ত্রাণ চাই না — চাই কর্মসংস্থান, চাই উন্নয়ন, চাই <span class="text-eblue font-bold">হাইমচরেই ইপিজেড</span>।
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="https://example.com" onclick="showPage('campaign')" class="btn-primary text-white font-bold px-8 py-4 rounded-full text-lg">📢 ক্যাম্পেইন দেখুন</a>
+        <a href="https://example.com" onclick="showPage('history')" class="glass text-gold font-bold px-8 py-4 rounded-full text-lg border border-gold/30 hover:border-gold/70 hover:bg-gold/10 transition-all">📜 ইতিহাস জানুন</a>
+      </div>
+      <div class="mt-14 float-slow">
+        <svg class="w-7 h-7 mx-auto text-gold/70" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 14l-7 7-7-7"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-deepred/90 py-3 overflow-hidden border-y border-red-900">
+    <div class="marquee font-bold text-white text-sm md:text-base">
+      <span>⚡ হাইমচরেই ইপিজেড চাই</span><span>🌊 নদী ভাঙনের ক্ষতিপূরণ — উন্নয়ন</span><span>👥 ১,৫০,০০০+ কর্মসংস্থানের সম্ভাবনা</span><span>✊ হাইমচরের অধিকার, আমাদের অঙ্গীকার</span><span>⚡ হাইমচরেই ইপিজেড চাই</span><span>🌊 নদী ভাঙনের ক্ষতিপূরণ — উন্নয়ন</span><span>👥 ১,৫০,০০০+ কর্মসংস্থানের সম্ভাবনা</span><span>✊ হাইমচরের অধিকার, আমাদের অঙ্গীকার</span>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-20 md:py-28">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="reveal-left">
+        <span class="text-gold font-bold text-sm tracking-widest uppercase">কেন এই দাবি?</span>
+        <h2 class="text-3xl md:text-5xl font-black text-white mt-3 mb-6 leading-tight">মেঘনার পাড়ে দাঁড়িয়ে<br><span class="text-gradient-red">একটি জনপদের আর্তনাদ</span></h2>
+        <p class="text-gray-300 leading-relaxed mb-4 text-lg">
+          চাঁদপুর জেলার হাইমচর উপজেলা — প্রমত্তা মেঘনার তীরে অবস্থিত প্রায় <strong class="text-gold">১.২৫ লক্ষ</strong> মানুষের জনপদ। গত তিন দশকেরও বেশি সময় ধরে নদী ভাঙনে হাজার হাজার ঘরবাড়ি, ফসলি জমি ও স্বপ্ন বিলীন হয়ে গেছে মেঘনার গর্ভে।
+        </p>
+        <p class="text-gray-300 leading-relaxed mb-4 text-lg">
+          কৃষিনির্ভর এই জনগোষ্ঠীর সামনে আজ বেকারত্ব, যুবসমাজের অভিবাসন ও অনিশ্চয়তা। অথচ মেঘনার চমৎকার নৌপথ হাইমচরকে দিয়েছে শিল্প-পরিবহনের অনন্য সুবিধা।
+        </p>
+        <p class="text-white font-bold text-lg blockquote-fancy pl-5 py-3 rounded-r-xl">
+          একটি ইপিজেড পারে এই জনপদের ভাগ্য বদলে দিতে। তাই আমাদের দাবি একটাই — ইপিজেড হতে হবে হাইমচরেই।
+        </p>
+      </div>
+      <div class="reveal-right">
+        <div class="card3d glass-red rounded-3xl p-8 relative overflow-hidden">
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-gold/10 rounded-full blur-2xl"></div>
+          <h3 class="text-2xl font-black text-gold mb-5">📦 ইপিজেড (EPZ) কী?</h3>
+          <p class="text-gray-200 leading-relaxed mb-5">
+            <strong>Export Processing Zone</strong> — রপ্তানিমুখী শিল্পের জন্য বিশেষ অর্থনৈতিক অঞ্চল।
+          </p>
+          <ul class="space-y-3 text-gray-200">
+            <li class="flex gap-3"><span class="text-gold">✔</span> কর সুবিধা ও শুল্কমুক্ত আমদানি</li>
+            <li class="flex gap-3"><span class="text-gold">✔</span> সহজ বিনিয়োগ নীতি ও One-Stop সেবা</li>
+            <li class="flex gap-3"><span class="text-gold">✔</span> ব্যাপক কর্মসংস্থান সৃষ্টি</li>
+            <li class="flex gap-3"><span class="text-gold">✔</span> বৈদেশিক বিনিয়োগ (FDI) আকর্ষণ</li>
+            <li class="flex gap-3"><span class="text-gold">✔</span> অবকাঠামো উন্নয়ন — নদী ভাঙন রোধেও সহায়ক</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="relative py-20 grain" style="background: linear-gradient(180deg, transparent, rgba(185,28,28,0.10), transparent);">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-center text-3xl md:text-4xl font-black text-white mb-3 reveal">পরিসংখ্যানে <span class="text-gradient-gold">হাইমচরের বাস্তবতা</span></h2>
+      <p class="text-center text-gray-400 mb-14 reveal">সংখ্যাগুলো শুধু পরিসংখ্যান নয় — প্রতিটি সংখ্যার পেছনে আছে একেকটি পরিবারের গল্প</p>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <div class="card3d glass rounded-2xl p-6 md:p-8 text-center reveal">
+          <div class="text-3xl md:text-5xl font-black text-gradient-red mb-2"><span class="counter" data-target="35605">0</span>+</div>
+          <div class="text-gray-300 font-semibold text-sm md:text-base">নদী ভাঙনে বাস্তুচ্যুত মানুষ<br><span class="text-gray-500 text-xs">(গত ৩০+ বছরে)</span></div>
+        </div>
+        <div class="card3d glass rounded-2xl p-6 md:p-8 text-center reveal" style="transition-delay:.1s">
+          <div class="text-3xl md:text-5xl font-black text-gradient-gold mb-2"><span class="counter" data-target="150000">0</span>+</div>
+          <div class="text-gray-300 font-semibold text-sm md:text-base">সম্ভাব্য কর্মসংস্থান<br><span class="text-gray-500 text-xs">ইপিজেড বাস্তবায়নে</span></div>
+        </div>
+        <div class="card3d glass rounded-2xl p-6 md:p-8 text-center reveal" style="transition-delay:.2s">
+          <div class="text-3xl md:text-5xl font-black text-eblue mb-2"><span class="counter" data-target="125000">0</span>+</div>
+          <div class="text-gray-300 font-semibold text-sm md:text-base">মোট জনসংখ্যা<br><span class="text-gray-500 text-xs">অধিকাংশ কৃষিনির্ভর</span></div>
+        </div>
+        <div class="card3d glass rounded-2xl p-6 md:p-8 text-center reveal" style="transition-delay:.3s">
+          <div class="text-3xl md:text-5xl font-black text-gradient-red mb-2"><span class="counter" data-target="30">0</span>+</div>
+          <div class="text-gray-300 font-semibold text-sm md:text-base">বছরের অবিরাম ভাঙন<br><span class="text-gray-500 text-xs">হাজারো ঘর ও জমি বিলীন</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-20 md:py-28">
+    <h2 class="text-center text-3xl md:text-4xl font-black text-white mb-3 reveal">কেন <span class="text-gradient-gold">হাইমচরেই</span> ইপিজেড?</h2>
+    <p class="text-center text-gray-400 mb-14 max-w-2xl mx-auto reveal">শুধু আবেগ নয় — যুক্তি, ভূগোল ও ন্যায্যতার প্রশ্নেও হাইমচরই সবচেয়ে যোগ্য স্থান</p>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="card3d glass rounded-2xl p-8 reveal">
+        <div class="w-14 h-14 rounded-2xl bg-eblue/15 flex items-center justify-center text-3xl mb-5">🚢</div>
+        <h3 class="text-xl font-bold text-white mb-3">অসাধারণ নৌপথ সুবিধা</h3>
+        <p class="text-gray-400 leading-relaxed">মেঘনা নদীর তীরে অবস্থানের ফলে শিল্প-পণ্য পরিবহনে সাশ্রয়ী ও কার্যকর নৌপথের অনন্য সুবিধা রয়েছে হাইমচরের।</p>
+      </div>
+      <div class="card3d glass rounded-2xl p-8 reveal" style="transition-delay:.1s">
+        <div class="w-14 h-14 rounded-2xl bg-deepred/20 flex items-center justify-center text-3xl mb-5">🏚️</div>
+        <h3 class="text-xl font-bold text-white mb-3">ক্ষতিগ্রস্তদের ন্যায্য পাওনা</h3>
+        <p class="text-gray-400 leading-relaxed">৩৫ হাজারেরও বেশি বাস্তুচ্যুত মানুষের পুনর্বাসন ও জীবিকার জন্য সরাসরি উপকার পৌঁছাতে হলে ইপিজেড হতে হবে হাইমচরেই।</p>
+      </div>
+      <div class="card3d glass rounded-2xl p-8 reveal" style="transition-delay:.2s">
+        <div class="w-14 h-14 rounded-2xl bg-gold/15 flex items-center justify-center text-3xl mb-5">👷</div>
+        <h3 class="text-xl font-bold text-white mb-3">বেকারত্ব নিরসন</h3>
+        <p class="text-gray-400 leading-relaxed">উচ্চ বেকারত্ব ও যুবসমাজের অভিবাসন রোধে স্থানীয় কর্মসংস্থানই একমাত্র টেকসই সমাধান।</p>
+      </div>
+      <div class="card3d glass rounded-2xl p-8 reveal">
+        <div class="w-14 h-14 rounded-2xl bg-eblue/15 flex items-center justify-center text-3xl mb-5">🛡️</div>
+        <h3 class="text-xl font-bold text-white mb-3">ভাঙন রোধে অবকাঠামো</h3>
+        <p class="text-gray-400 leading-relaxed">ইপিজেড স্থাপনের সাথে যুক্ত নদী-তীর সংরক্ষণ অবকাঠামো হাইমচরকে ভাঙনের হাত থেকে রক্ষা করবে।</p>
+      </div>
+      <div class="card3d glass rounded-2xl p-8 reveal" style="transition-delay:.1s">
+        <div class="w-14 h-14 rounded-2xl bg-deepred/20 flex items-center justify-center text-3xl mb-5">🌾</div>
+        <h3 class="text-xl font-bold text-white mb-3">কৃষি থেকে শিল্পে উত্তরণ</h3>
+        <p class="text-gray-400 leading-relaxed">শুধু কৃষিনির্ভরতা থেকে বেরিয়ে বৈচিত্র্যময় অর্থনীতি গড়ার সুযোগ — যা পুরো অঞ্চলের চেহারা বদলে দেবে।</p>
+      </div>
+      <div class="card3d glass rounded-2xl p-8 reveal" style="transition-delay:.2s">
+        <div class="w-14 h-14 rounded-2xl bg-gold/15 flex items-center justify-center text-3xl mb-5">🤝</div>
+        <h3 class="text-xl font-bold text-white mb-3">প্রতিশ্রুতির বাস্তবায়ন</h3>
+        <p class="text-gray-400 leading-relaxed">হাইমচরের জন্যই ইপিজেডের প্রস্তাব দেওয়া হয়েছিল। সেই প্রতিশ্রুতির বাস্তবায়নই আমাদের ন্যায্য দাবি।</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 pb-20 md:pb-28">
+    <div class="flex items-center justify-between mb-10">
+      <h2 class="text-3xl md:text-4xl font-black text-white reveal">📰 সাম্প্রতিক <span class="text-gradient-gold">আপডেট</span></h2>
+      <a href="https://example.com" onclick="showPage('campaign')" class="text-gold font-semibold hover:underline hidden sm:block">সব দেখুন →</a>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card3d glass rounded-2xl overflow-hidden reveal">
+        <div class="h-40 bg-gradient-to-br from-deepred/40 via-red-950 to-black flex items-center justify-center text-6xl">🏛️</div>
+        <div class="p-6">
+          <span class="text-xs font-bold text-gold bg-gold/10 px-3 py-1 rounded-full">২০২৬</span>
+          <h3 class="text-lg font-bold text-white mt-4 mb-2">চাঁদপুরে ইপিজেডের সম্ভাব্যতা যাচাই</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">সরকারের পক্ষ থেকে চাঁদপুর জেলায় ইপিজেড স্থাপনের সম্ভাব্যতা যাচাইয়ের ঘোষণা এসেছে। হাইমচরবাসীর দাবি — যাচাই ও বাস্তবায়ন হোক হাইমচরেই।</p>
+        </div>
+      </div>
+      <div class="card3d glass rounded-2xl overflow-hidden reveal" style="transition-delay:.1s">
+        <div class="h-40 bg-gradient-to-br from-eblue/30 via-cyan-950 to-black flex items-center justify-center text-6xl">✊</div>
+        <div class="p-6">
+          <span class="text-xs font-bold text-eblue bg-eblue/10 px-3 py-1 rounded-full">চলমান</span>
+          <h3 class="text-lg font-bold text-white mt-4 mb-2">তরুণদের অনলাইন দাবি জোরদার</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">হাইমচরের তরুণ সমাজ সোশ্যাল মিডিয়ায় #EPZofHaimchar দাবি-কে আরও শক্তিশালী করছে। প্রতিদিন যুক্ত হচ্ছে নতুন নতুন লোক।</p>
+        </div>
+      </div>
+      <div class="card3d glass rounded-2xl overflow-hidden reveal" style="transition-delay:.2s">
+        <div class="h-40 bg-gradient-to-br from-gold/25 via-yellow-950 to-black flex items-center justify-center text-6xl">🌊</div>
+        <div class="p-6">
+          <span class="text-xs font-bold text-red-400 bg-red-500/10 px-3 py-1 rounded-full">জরুরি</span>
+          <h3 class="text-lg font-bold text-white mt-4 mb-2">নদী ভাঙন অব্যাহত — সময় ফুরিয়ে যাচ্ছে</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">মেঘনার ভাঙন এখনো থামেনি। প্রতিটি বর্ষায় ঝুঁকিতে পড়ছে নতুন নতুন জনপদ। দ্রুত সিদ্ধান্ত এখন সময়ের দাবি।</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 pb-24">
+    <div class="card3d glass-red rounded-3xl p-10 md:p-16 text-center relative overflow-hidden reveal">
+      <div class="absolute -top-20 -left-20 w-60 h-60 bg-gold/10 rounded-full blur-3xl"></div>
+      <div class="absolute -bottom-20 -right-20 w-60 h-60 bg-eblue/10 rounded-full blur-3xl"></div>
+      <h2 class="text-3xl md:text-5xl font-black text-white mb-4 relative">আপনার কণ্ঠস্বরই <span class="text-gradient-gold">পরিবর্তনের শক্তি</span></h2>
+      <p class="text-gray-300 text-lg mb-8 max-w-2xl mx-auto relative">হাইমচরের সন্তান হিসেবে, বাংলাদেশের নাগরিক হিসেবে — এই ন্যায্য দাবির পাশে দাঁড়ান। আজই আন্দোলনে যুক্ত হোন।</p>
+      <a href="https://example.com" onclick="showPage('contact')" class="btn-gold inline-block px-10 py-4 rounded-full font-black text-lg relative">🤝 এখনই যুক্ত হোন</a>
+    </div>
+  </div>
+</section>
+
+<section id="page-history" class="page">
+  <div class="hero-bg grain relative pt-32 pb-16 md:pt-40 md:pb-24 overflow-hidden">
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <span class="text-gold font-bold tracking-widest text-sm uppercase">A থেকে Z</span>
+      <h1 class="text-4xl md:text-6xl font-black text-white mt-3 mb-5">হাইমচর ইপিজেডের <span class="text-gradient-gold">পূর্ণাঙ্গ ইতিহাস</span></h1>
+      <p class="text-gray-300 text-lg max-w-2xl mx-auto">আশা থেকে হতাশা, হতাশা থেকে দাবি — একটি জনপদের সংগ্রামের কথা</p>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-16">
+    <div class="reveal mb-20">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 rounded-2xl bg-gold/15 flex items-center justify-center text-2xl shrink-0">🌅</div>
+        <h2 class="text-2xl md:text-4xl font-black text-white">অধ্যায় ১: <span class="text-gradient-gold">প্রস্তাব ও আশার সূর্যোদয়</span></h2>
+      </div>
+      <div class="glass rounded-3xl p-8 md:p-12 space-y-5 text-gray-300 leading-relaxed text-base md:text-lg">
+        <p>শেখ হাসিনার সরকারের আমলে <strong class="text-white">হাইমচরের জন্য বিশেষভাবে</strong> একটি রপ্তানি প্রক্রিয়াকরণ অঞ্চল (EPZ) স্থাপনের প্রস্তাব দেওয়া হয়।</p>
+        <p>দশকের পর দশক ধরে মেঘনার ভাঙনে সব হারানো মানুষগুলোর চোখে প্রথমবারের মতো জ্বলে উঠেছিল আশার আলো।</p>
+      </div>
+    </div>
+
+    <div class="reveal mb-20">
+      <div class="flex items-center gap-4 mb-8">
+        <div class="w-12 h-12 rounded-2xl bg-deepred/20 flex items-center justify-center text-2xl shrink-0">🌑</div>
+        <h2 class="text-2xl md:text-4xl font-black text-white">অধ্যায় ২: <span class="text-gradient-red">স্থানান্তরের ছায়া ও উপেক্ষার বেদনা</span></h2>
+      </div>
+      <div class="glass rounded-3xl p-8 md:p-12 space-y-5 text-gray-300 leading-relaxed text-base md:text-lg">
+        <p>কিন্তু সময়ের সাথে সাথে চিত্র বদলাতে শুরু করে।</p>
+        <p>হাইমচরবাসীর কাছে এটি ছিল গভীর হতাশার।</p>
+      </div>
+    </div>
+
+    <div class="reveal mb-20">
+      <h2 class="text-2xl md:text-4xl font-black text-white text-center mb-14">📍 সংগ্রামের <span class="text-gradient-gold">টাইমলাইন</span></h2>
+      <div class="relative">
+        <div class="timeline-line"></div>
+        <div class="relative flex md:justify-start mb-12 pl-14 md:pl-0">
+          <div class="absolute left-2 md:left-1/2 md:-translate-x-1/2 w-9 h-9 rounded-full bg-gradient-to-br from-gold to-amber-600 flex items-center justify-center text-black font-black text-sm shadow-lg shadow-gold/30 z-10">১</div>
+          <div class="md:w-[45%] card3d glass rounded-2xl p-6">
+            <span class="text-gold text-xs font-bold uppercase tracking-wider">৩০+ বছরের প্রেক্ষাপট</span>
+            <h3 class="text-white font-bold text-lg mt-2 mb-2">মেঘনার অবিরাম ভাঙন</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">৩৫,৬০৫+ মানুষ বাস্তুচ্যুত, হাজারো ঘরবাড়ি ও ফসলি জমি নদীগর্ভে বিলীন।</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card3d glass-red rounded-3xl p-10 md:p-14 text-center reveal">
+      <div class="text-5xl mb-5">✊</div>
+      <p class="text-xl md:text-2xl font-bold text-white leading-relaxed mb-4">"ইতিহাস সাক্ষী — যে জনপদ সবচেয়ে বেশি হারিয়েছে, তার ন্যায্য পাওনা ফিরিয়ে দেওয়াই প্রকৃত উন্নয়ন।"</p>
+      <a href="https://example.com" onclick="showPage('campaign')" class="btn-gold inline-block px-8 py-3.5 rounded-full font-bold mt-4">আমাদের ক্যাম্পেইন দেখুন →</a>
+    </div>
+  </div>
+</section>
+
+<section id="page-campaign" class="page">
+  <div class="hero-bg grain relative pt-32 pb-16 md:pt-40 md:pb-24">
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <span class="text-gold font-bold tracking-widest text-sm uppercase">আমাদের কার্যক্রম</span>
+      <h1 class="text-4xl md:text-6xl font-black text-white mt-3 mb-5">চলমান <span class="text-gradient-gold">ক্যাম্পেইনসমূহ</span></h1>
+      <p class="text-gray-300 text-lg max-w-2xl mx-auto">প্রতিটি ক্যাম্পেইন একেকটি পদক্ষেপ — হাইমচরের ন্যায্য অধিকার আদায়ের পথে</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="card3d glass rounded-3xl overflow-hidden mb-14 reveal grid lg:grid-cols-2">
+      <div class="relative h-64 lg:h-auto bg-gradient-to-br from-deepred/50 via-red-950 to-black flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 opacity-30" style="background: radial-gradient(circle at 30% 70%, rgba(250,204,21,0.3), transparent 50%);"></div>
+        <div class="text-center relative z-10 p-8">
+          <div class="text-7xl mb-4 float-slow">📢</div>
+          <div class="text-2xl font-black text-gradient-gold">#EPZofHaimchar</div>
+        </div>
+        <span class="absolute top-4 left-4 bg-gold text-black text-xs font-black px-4 py-1.5 rounded-full">⭐ ফিচার্ড ক্যাম্পেইন</span>
+      </div>
+      <div class="p-8 md:p-12">
+        <span class="text-eblue text-xs font-bold uppercase tracking-wider bg-eblue/10 px-3 py-1 rounded-full">চলমান • অনলাইন + মাঠ পর্যায়</span>
+        <h2 class="text-2xl md:text-3xl font-black text-white mt-5 mb-4">"হাইমচরেই ইপিজেড চাই" — গণসচেতনতা ক্যাম্পেইন</h2>
+        <p class="text-gray-300 leading-relaxed mb-4">হাইমচরের তরুণ সমাজের নেতৃত্বে চলছে এই ক্যাম্পেইন।</p>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 text-white font-bold px-8 py-3.5 rounded-full">
+          ▶ বিস্তারিত দেখুন (YouTube)
+        </a>
+      </div>
+    </div>
+
+    <h2 class="text-2xl md:text-3xl font-black text-white mb-8 reveal">🗂️ অন্যান্য ক্যাম্পেইন</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+      <div class="card3d glass rounded-2xl overflow-hidden reveal">
+        <div class="h-36 bg-gradient-to-br from-eblue/30 to-black flex items-center justify-center text-5xl">✍️</div>
+        <div class="p-6">
+          <span class="text-xs font-bold text-gold bg-gold/10 px-3 py-1 rounded-full">শীঘ্রই আসছে</span>
+          <h3 class="text-lg font-bold text-white mt-4 mb-2">গণস্বাক্ষর কর্মসূচি</h3>
+          <p class="text-gray-400 text-sm">হাইমচরে ইপিজেড বাস্তবায়নের দাবিতে লক্ষাধিক স্বাক্ষর সংগ্রহের লক্ষ্যমাত্রা।</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-2xl md:text-3xl font-black text-white mb-3 reveal">🖼️ পোস্টার ও <span class="text-gradient-gold">প্রচার সামগ্রী</span></h2>
+    <p class="text-gray-400 mb-10 reveal">ডাউনলোড করুন, শেয়ার করুন — প্রতিটি শেয়ারই আন্দোলনকে এগিয়ে নেয়</p>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-5">
+      <div class="poster-card rounded-2xl overflow-hidden border border-white/10 reveal">
+        <div class="aspect-[3/4] bg-gradient-to-b from-deepred via-red-950 to-black flex flex-col items-center justify-center p-5 text-center">
+          <div class="text-4xl mb-3">✊</div>
+          <div class="font-black text-white text-sm md:text-lg leading-snug">হাইমচরেই<br>ইপিজেড চাই</div>
+          <div class="text-gold text-[10px] md:text-xs mt-3 font-bold">#EPZofHaimchar</div>
+        </div>
+        <a href="https://example.com" target="_blank" rel="noopener" class="w-full block bg-white/5 hover:bg-gold hover:text-black text-gold font-bold py-3 text-sm transition-all text-center">⬇ ডাউনলোড</a>
+      </div>
+      <div class="poster-card rounded-2xl overflow-hidden border border-white/10 reveal" style="transition-delay:.05s">
+        <div class="aspect-[3/4] bg-gradient-to-b from-cyan-800 via-cyan-950 to-black flex flex-col items-center justify-center p-5 text-center">
+          <div class="text-4xl mb-3">🌊</div>
+          <div class="font-black text-white text-sm md:text-lg leading-snug">৩৫,৬০৫ মানুষ<br>বাস্তুচ্যুত</div>
+          <div class="text-eblue text-[10px] md:text-xs mt-3 font-bold">আর কত ক্ষতি?</div>
+        </div>
+        <a href="https://example.com" target="_blank" rel="noopener" class="w-full block bg-white/5 hover:bg-gold hover:text-black text-gold font-bold py-3 text-sm transition-all text-center">⬇ ডাউনলোড</a>
+      </div>
+      <div class="poster-card rounded-2xl overflow-hidden border border-white/10 reveal" style="transition-delay:.1s">
+        <div class="aspect-[3/4] bg-gradient-to-b from-amber-600 via-yellow-900 to-black flex flex-col items-center justify-center p-5 text-center">
+          <div class="text-4xl mb-3">👷</div>
+          <div class="font-black text-white text-sm md:text-lg leading-snug">১,৫০,০০০+<br>কর্মসংস্থান</div>
+          <div class="text-gold text-[10px] md:text-xs mt-3 font-bold">ইপিজেড = ভবিষ্যৎ</div>
+        </div>
+        <a href="https://example.com" target="_blank" rel="noopener" class="w-full block bg-white/5 hover:bg-gold hover:text-black text-gold font-bold py-3 text-sm transition-all text-center">⬇ ডাউনলোড</a>
+      </div>
+      <div class="poster-card rounded-2xl overflow-hidden border border-white/10 reveal" style="transition-delay:.15s">
+        <div class="aspect-[3/4] bg-gradient-to-b from-gray-700 via-gray-900 to-black flex flex-col items-center justify-center p-5 text-center">
+          <div class="text-4xl mb-3">🏭</div>
+          <div class="font-black text-white text-sm md:text-lg leading-snug">প্রতিশ্রুতি নয়<br>বাস্তবায়ন চাই</div>
+          <div class="text-red-400 text-[10px] md:text-xs mt-3 font-bold">হাইমচরের অধিকার</div>
+        </div>
+        <a href="https://example.com" target="_blank" rel="noopener" class="w-full block bg-white/5 hover:bg-gold hover:text-black text-gold font-bold py-3 text-sm transition-all text-center">⬇ ডাউনলোড</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-contact" class="page">
+  <div class="hero-bg grain relative pt-32 pb-16 md:pt-40 md:pb-24">
+    <div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+      <span class="text-gold font-bold tracking-widest text-sm uppercase">আমাদের সাথে যুক্ত হোন</span>
+      <h1 class="text-4xl md:text-6xl font-black text-white mt-3 mb-5">তরুণরাই <span class="text-gradient-gold">পরিবর্তনের কারিগর</span></h1>
+      <p class="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed">প্রিয় হাইমচরের সন্তান, প্রিয় তরুণ বন্ধু — এই দাবি আপনার, আমার, আমাদের সবার।</p>
+    </div>
+  </div>
+
+  <div class="max-w-5xl mx-auto px-6 py-16">
+    <div class="grid md:grid-cols-2 gap-8 mb-16">
+      <div class="card3d glass rounded-3xl p-10 text-center relative overflow-hidden reveal">
+        <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-eblue to-blue-700 flex items-center justify-center text-4xl mb-6 shadow-xl shadow-eblue/30 float-slow">💬</div>
+        <h2 class="text-2xl font-black text-white mb-3">মেসেঞ্জার গ্রুপে যোগ দিন</h2>
+        <p class="text-gray-400 leading-relaxed mb-8">দাবির সব আপডেট, পরিকল্পনা ও আলোচনায় সরাসরি অংশ নিন।</p>
+        <a href="https://example.com" target="_blank" rel="noopener" class="inline-block bg-gradient-to-r from-eblue to-blue-600 text-white font-black px-10 py-4 rounded-full hover:shadow-xl hover:shadow-eblue/40 hover:-translate-y-1 transition-all">
+          🚀 গ্রুপে জয়েন করুন
+        </a>
+      </div>
+      <div class="card3d glass rounded-3xl p-10 text-center relative overflow-hidden reveal" style="transition-delay:.1s">
+        <div class="w-20 h-20 mx-auto rounded-3xl bg-gradient-to-br from-deepred to-red-900 flex items-center justify-center text-4xl mb-6 shadow-xl shadow-deepred/40 float-slow" style="animation-delay:1s">👤</div>
+        <h2 class="text-2xl font-black text-white mb-3">এডমিনের সাথে যোগাযোগ</h2>
+        <p class="text-gray-400 leading-relaxed mb-8">কোনো প্রশ্ন, পরামর্শ বা স্বেচ্ছাসেবক হিসেবে কাজ করতে চাইলে সরাসরি এডমিনের ফেসবুকে নক করুন।</p>
+        <a href="https://example.com" target="_blank" rel="noopener" class="btn-primary inline-block text-white font-black px-10 py-4 rounded-full">
+          📩 Facebook-এ মেসেজ দিন
+        </a>
+      </div>
+    </div>
+
+    <div class="glass rounded-3xl p-8 md:p-12 reveal">
+      <h2 class="text-2xl md:text-3xl font-black text-white text-center mb-10">আপনি যেভাবে <span class="text-gradient-gold">সাহায্য করতে পারেন</span></h2>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+        <div class="p-4">
+          <div class="text-4xl mb-3">📲</div>
+          <h3 class="font-bold text-white mb-1">শেয়ার করুন</h3>
+          <p class="text-gray-400 text-sm">#EPZofHaimchar কনটেন্ট ছড়িয়ে দিন</p>
+        </div>
+        <div class="p-4">
+          <div class="text-4xl mb-3">🗣️</div>
+          <h3 class="font-bold text-white mb-1">কথা বলুন</h3>
+          <p class="text-gray-400 text-sm">পরিবার ও বন্ধুদের জানান এই দাবির কথা</p>
+        </div>
+        <div class="p-4">
+          <div class="text-4xl mb-3">🙋</div>
+          <h3 class="font-bold text-white mb-1">স্বেচ্ছাসেবক হোন</h3>
+          <p class="text-gray-400 text-sm">মাঠ পর্যায়ের কর্মসূচিতে অংশ নিন</p>
+        </div>
+        <div class="p-4">
+          <div class="text-4xl mb-3">✍️</div>
+          <h3 class="font-bold text-white mb-1">লিখুন</h3>
+          <p class="text-gray-400 text-sm">হাইমচরের গল্প তুলে ধরুন সবার সামনে</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="relative z-10 border-t border-white/10 mt-10" style="background: linear-gradient(180deg, rgba(185,28,28,0.08), #050505);">
+  <div class="max-w-7xl mx-auto px-6 py-14">
+    <div class="grid md:grid-cols-3 gap-10 mb-10">
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-deepred to-red-900 flex items-center justify-center font-black text-gold">EPZ</div>
+          <div class="font-bold text-white text-lg">EPZ of Haimchar</div>
+        </div>
+        <p class="text-gray-400 text-sm leading-relaxed">মেঘনা পাড়ের ভাঙনকবলিত মানুষের ন্যায্য অধিকার আদায়ের গণদাবি। হাইমচর, চাঁদপুর, বাংলাদেশ।</p>
+      </div>
+      <div>
+        <h3 class="font-bold text-gold mb-4">দ্রুত লিংক</h3>
+        <div class="flex flex-col gap-2 text-sm text-gray-400">
+          <a href="https://example.com" onclick="showPage('home')" class="hover:text-gold transition-colors">→ হোম</a>
+          <a href="https://example.com" onclick="showPage('history')" class="hover:text-gold transition-colors">→ ইতিহাস</a>
+          <a href="https://example.com" onclick="showPage('campaign')" class="hover:text-gold transition-colors">→ ক্যাম্পেইন</a>
+          <a href="https://example.com" onclick="showPage('contact')" class="hover:text-gold transition-colors">→ যোগাযোগ</a>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-bold text-gold mb-4">আন্দোলনের ডাক</h3>
+        <p class="text-gray-400 text-sm mb-4">#EPZofHaimchar — প্রতিটি শেয়ারই একটি প্রতিবাদ, প্রতিটি কণ্ঠস্বরই একটি শক্তি।</p>
+        <a href="https://example.com" onclick="showPage('contact')" class="btn-gold inline-block px-6 py-2.5 rounded-full font-bold text-sm">যুক্ত হোন</a>
+      </div>
+    </div>
+    <div class="border-t border-white/10 pt-8 text-center">
+      <p class="text-xl md:text-2xl font-black text-gradient-gold mb-2">"হাইমচরের অধিকার, আমাদের অঙ্গীকার।"</p>
+      <p class="text-gray-500 text-xs">© ২০২৬ EPZ of Haimchar Movement • জনগণের পক্ষ থেকে, জনগণের জন্য</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + page);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.page === page);
+  });
+  document.getElementById('mobileMenu').classList.add('hidden');
+  resetBurger();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  setTimeout(initReveal, 50);
+  if (page === 'home') setTimeout(runCounters, 300);
+}
+
+window.addEventListener('hashchange', () => {
+  const h = location.hash.replace('#', '');
+  if (['home','history','campaign','contact'].includes(h)) showPage(h);
+});
+if (['#history','#campaign','#contact'].includes(location.hash)) showPage(location.hash.slice(1));
+
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+let menuOpen = false;
+function resetBurger() {
+  menuOpen = false;
+  const spans = burger.querySelectorAll('span');
+  spans[0].style.transform = ''; spans[1].style.opacity = ''; spans[2].style.transform = '';
+}
+burger.addEventListener('click', () => {
+  menuOpen = !menuOpen;
+  mobileMenu.classList.toggle('hidden');
+  const spans = burger.querySelectorAll('span');
+  if (menuOpen) {
+    spans[0].style.transform = 'translateY(8px) rotate(45deg)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'translateY(-8px) rotate(-45deg)';
+  } else resetBurger();
+});
+
+let observer;
+function initReveal() {
+  if (observer) observer.disconnect();
+  observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.page.active .reveal, .page.active .reveal-left, .page.active .reveal-right').forEach(el => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight) el.classList.add('visible');
+    else observer.observe(el);
+  });
+}
+initReveal();
+
+const bnDigits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+function toBn(n) { return n.toString().replace(/\d/g, d => bnDigits[d]).replace(/,/g, ','); }
+function formatBn(n) { return toBn(n.toLocaleString('en-US')); }
+function runCounters() {
+  document.querySelectorAll('#page-home .counter').forEach(el => {
+    if (el.dataset.done) return;
+    const target = +el.dataset.target;
+    const dur = 1800; const start = performance.now();
+    function tick(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = formatBn(Math.floor(target * eased));
+      if (p < 1) requestAnimationFrame(tick); else { el.textContent = formatBn(target); el.dataset.done = '1'; }
+    }
+    requestAnimationFrame(tick);
+  });
+}
+const statsObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { runCounters(); statsObserver.disconnect(); } });
+}, { threshold: 0.3 });
+document.querySelectorAll('#page-home .counter').forEach(c => statsObserver.observe(c.closest('.card3d')));
+
+const canvas = document.getElementById('riverCanvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize();
+addEventListener('resize', resize);
+const COLORS = ['rgba(56,189,248,', 'rgba(250,204,21,', 'rgba(185,28,28,'];
+function makeParticle() {
+  return {
+    x: Math.random() * W, y: Math.random() * H,
+    r: Math.random() * 2.2 + 0.5,
+    vx: 0.25 + Math.random() * 0.6,
+    vy: (Math.random() - 0.5) * 0.18,
+    a: Math.random() * 0.5 + 0.1,
+    c: COLORS[Math.floor(Math.random() * COLORS.length)],
+    phase: Math.random() * Math.PI * 2
+  };
+}
+for (let i = 0; i < 70; i++) particles.push(makeParticle());
+function animate(t) {
+  ctx.clearRect(0, 0, W, H);
+  particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy + Math.sin(t / 1200 + p.phase) * 0.15;
+    if (p.x > W + 10) { p.x = -10; p.y = Math.random() * H; }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = p.c + p.a + ')';
+    ctx.fill();
+  });
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+
+function downloadPoster(btn, text) {
+  const c = document.createElement('canvas');
+  c.width = 900; c.height = 1200;
+  const g = c.getContext('2d');
+  const grad = g.createLinearGradient(0, 0, 0, 1200);
+  grad.addColorStop(0, '#b91c1c'); grad.addColorStop(0.5, '#450a0a'); grad.addColorStop(1, '#0a0a0a');
+  g.fillStyle = grad; g.fillRect(0, 0, 900, 1200);
+  g.fillStyle = '#facc15'; g.font = '900 64px "Noto Sans Bengali", sans-serif';
+  g.textAlign = 'center';
+  g.fillText(text, 450, 560);
+  g.fillStyle = '#fff'; g.font = '700 36px sans-serif';
+  g.fillText('#EPZofHaimchar', 450, 1080);
+  g.fillStyle = 'rgba(250,204,21,0.7)'; g.font = '600 26px "Noto Sans Bengali", sans-serif';
+  g.fillText('হাইমচরের অধিকার, আমাদের অঙ্গীকার', 450, 1130);
+  const a = document.createElement('a');
+  a.download = 'EPZ-Haimchar-Poster.png';
+  a.href = c.toDataURL('image/png');
+  a.click();
+  const old = btn.textContent;
+  btn.textContent = '✅ ডাউনলোড হয়েছে!';
+  setTimeout(() => btn.textContent = old, 2000);
+}
+</script>
+</body>
+</html>
