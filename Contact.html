@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="EPZ of Haimchar যোগাযোগ পৃষ্ঠা — Messenger group, Messenger contact, YouTube, Facebook.">
+<title>যোগাযোগ — EPZ of Haimchar</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700;800;900&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        deepblack: '#0a0a0a',
+        deepred: '#b91c1c',
+        gold: '#facc15',
+        eblue: '#38bdf8',
+      },
+      fontFamily: {
+        bengali: ['"Noto Sans Bengali"', '"Hind Siliguri"', 'sans-serif'],
+      }
+    }
+  }
+}
+</script>
+<style>
+  * { font-family: 'Noto Sans Bengali', 'Hind Siliguri', sans-serif; }
+  html { scroll-behavior: smooth; }
+  body { background: #0a0a0a; color: #e5e5e5; overflow-x: hidden; }
+
+  .glass {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .glass-red {
+    background: linear-gradient(135deg, rgba(185,28,28,0.18), rgba(10,10,10,0.6));
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(185,28,28,0.35);
+  }
+
+  .hero-bg {
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 110%, rgba(56,189,248,0.18), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 0%, rgba(185,28,28,0.25), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 10% 20%, rgba(250,204,21,0.10), transparent 60%),
+      linear-gradient(180deg, #0a0a0a 0%, #120a0a 50%, #0a0f14 100%);
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(110deg, #facc15, #fde68a, #f59e0b, #facc15);
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shine 5s linear infinite;
+  }
+  @keyframes shine { to { background-position: 250% center; } }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #b91c1c, #7f1d1d);
+    transition: all .35s ease;
+    box-shadow: 0 8px 25px -5px rgba(185,28,28,0.5);
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -5px rgba(185,28,28,0.7); }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #facc15, #d97706);
+    color: #0a0a0a;
+    transition: all .35s ease;
+    box-shadow: 0 8px 25px -5px rgba(250,204,21,0.4);
+  }
+  .btn-gold:hover { transform: translateY(-3px); box-shadow: 0 15px 35px -5px rgba(250,204,21,0.6); }
+
+  .card3d {
+    transition: transform .4s ease, box-shadow .4s ease, border-color .4s ease;
+  }
+  .card3d:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 60px -10px rgba(185,28,28,0.35);
+    border-color: rgba(250,204,21,0.35);
+  }
+
+  .reveal { opacity: 0; transform: translateY(35px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  .float-slow { animation: floatY 6s ease-in-out infinite; }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+</style>
+</head>
+<body class="font-bengali">
+
+<nav class="fixed top-0 left-0 right-0 z-50 glass border-b border-white/10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16 md:h-20">
+    <a href="index.html" class="flex items-center gap-3 group">
+      <div class="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-br from-deepred to-red-900 flex items-center justify-center font-black text-gold text-lg shadow-lg shadow-red-900/50 group-hover:scale-110 transition-transform">EPZ</div>
+      <div>
+        <div class="font-bold text-white text-base md:text-lg leading-tight">EPZ of Haimchar</div>
+        <div class="text-[10px] md:text-xs text-gold/80 -mt-0.5">যোগাযোগ পৃষ্ঠা</div>
+      </div>
+    </a>
+    <a href="https://example.com" class="btn-gold px-5 py-2 rounded-full font-bold text-sm">হোমে ফিরুন</a>
+  </div>
+</nav>
+
+<main class="relative z-10">
+  <section class="hero-bg min-h-screen pt-28 pb-16">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8 text-sm reveal visible">
+        <span class="w-2.5 h-2.5 rounded-full bg-gold"></span>
+        <span class="text-gold font-semibold">যোগাযোগ করুন • যুক্ত থাকুন • আন্দোলনে অংশ নিন</span>
+      </div>
+
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight text-white mb-5 reveal visible">
+        আমাদের সাথে <span class="text-gradient-gold">যুক্ত হোন</span>
+      </h1>
+      <p class="text-gray-300 text-base md:text-xl max-w-2xl mx-auto leading-relaxed mb-12 reveal visible">
+        Messenger group, Messenger contact, YouTube, আর Facebook — সব এক জায়গায়।
+      </p>
+
+      <div class="grid md:grid-cols-2 gap-6 text-left">
+        <div class="card3d glass rounded-3xl p-8 reveal">
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-eblue to-blue-700 flex items-center justify-center text-3xl mb-5 float-slow">💬</div>
+          <h2 class="text-2xl font-black text-white mb-3">Messenger Group</h2>
+          <p class="text-gray-400 leading-relaxed mb-6">দাবির আপডেট, পরিকল্পনা, আর আলোচনা—সবখানে সরাসরি যুক্ত থাকুন।</p>
+          <a href="https://example.com" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 text-white font-bold px-6 py-3 rounded-full">
+            গ্রুপে যোগ দিন
+          </a>
+        </div>
+
+        <div class="card3d glass rounded-3xl p-8 reveal" style="transition-delay:.1s">
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-deepred to-red-900 flex items-center justify-center text-3xl mb-5 float-slow">👤</div>
+          <h2 class="text-2xl font-black text-white mb-3">Messenger Contact</h2>
+          <p class="text-gray-400 leading-relaxed mb-6">কোনো প্রশ্ন, পরামর্শ, বা স্বেচ্ছাসেবক হতে চাইলে সরাসরি মেসেঞ্জারে লিখুন।</p>
+          <a href="https://example.com" target="_blank" rel="noopener" class="btn-gold inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full">
+            মেসেজ পাঠান
+          </a>
+        </div>
+
+        <div class="card3d glass rounded-3xl p-8 reveal" style="transition-delay:.2s">
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-red-600 to-black flex items-center justify-center text-3xl mb-5 float-slow">▶</div>
+          <h2 class="text-2xl font-black text-white mb-3">YouTube</h2>
+          <p class="text-gray-400 leading-relaxed mb-6">ভিডিও, প্রচার, আপডেট, এবং ক্যাম্পেইন কনটেন্ট দেখতে আমাদের YouTube চ্যানেলে যান।</p>
+          <a href="https://example.com" target="_blank" rel="noopener" class="btn-primary inline-flex items-center gap-2 text-white font-bold px-6 py-3 rounded-full">
+            চ্যানেল দেখুন
+          </a>
+        </div>
+
+        <div class="card3d glass rounded-3xl p-8 reveal" style="transition-delay:.3s">
+          <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center text-3xl mb-5 float-slow">f</div>
+          <h2 class="text-2xl font-black text-white mb-3">Facebook</h2>
+          <p class="text-gray-400 leading-relaxed mb-6">সর্বশেষ পোস্ট, লাইভ আপডেট, আর কমিউনিটি আলোচনার জন্য Facebook অনুসরণ করুন।</p>
+          <a href="https://example.com" target="_blank" rel="noopener" class="btn-gold inline-flex items-center gap-2 font-bold px-6 py-3 rounded-full">
+            Facebook খুলুন
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-10 glass-red rounded-3xl p-8 md:p-10 reveal">
+        <h2 class="text-2xl md:text-3xl font-black text-white mb-3">যোগাযোগের উদ্দেশ্য</h2>
+        <p class="text-gray-300 leading-relaxed max-w-3xl mx-auto">
+          হাইমচরের ন্যায্য দাবি, EPZ, এবং গণআন্দোলনের প্রতিটি কাজে আপনার অংশগ্রহণ গুরুত্বপূর্ণ।
+          শেয়ার করুন, যুক্ত হন, আর সবাইকে জানান।
+        </p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
